@@ -1,3 +1,9 @@
+if (document.location.href!="https://timothy-sorber.github.io/jsgame/") {
+	let a = document.createElement("a");
+	a.href = "https://timothy-sorber.github.io/jsgame/";
+	a.click();
+}
+
 import { game, Location, Vector2, Object } from './jsgame/jsgame.js';
 
 const canvas = document.getElementById("canvas"),
