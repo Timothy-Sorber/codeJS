@@ -32,6 +32,8 @@ const canvas = document.getElementById("canvas"),
 
 			this.camera.position.x += dx * 0.1;
 			this.camera.position.y += dy * 0.1;
+
+			this.engine.drawText("W = jump, A/D = move", -400, 0, "white");
 		}
 	});
 
