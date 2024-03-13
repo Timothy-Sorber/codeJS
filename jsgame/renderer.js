@@ -33,9 +33,9 @@ export class renderer {
 		this.ctx.strokeStyle = color;
 		this.ctx.lineWidth = lineWidth;
 		if (fill) {
-			this.ctx.fillRect(pos.x, pos.y, size.x, size.y);
+			this.ctx.fillRect(pos.x-size.x/2, pos.y-size.y/2, size.x, size.y);
 		} else {
-			this.ctx.drawRect(pos.x, pos.y, size.x, size.y);
+			this.ctx.drawRect(pos.x-size.x/2, pos.y-size.y/2, size.x, size.y);
 		}
 	}
 
@@ -57,13 +57,15 @@ export class renderer {
 		}
 	}
 
-	drawText(text, x, y, color, font="16px monospace", adjustPos=true) {
+	drawText(text, x, y, color, f=new font(), adjustPos=true) {
 		let pos = new Vector2(x, y);
 		if (adjustPos) {
 			pos = util.worldToScreen(pos, this.camera, this.viewPort);
 		}
 		this.ctx.fillStyle = color;
-		this.ctx.font = font;
+		let af = font.fromString(f.get());
+		af.size = af.size*this.camera.zoom;
+		this.ctx.font = af.get();
 		this.ctx.fillText(text, pos.x, pos.y);
 	}
 
@@ -92,5 +94,22 @@ export class renderer {
 		if (image.complete) {
 			this.ctx.drawImage(image, pos.x-size.x/2, pos.y-size.y/2, size.x, size.y);
 		}
+	}
+}
+export class font {
+	constructor(size=16, family="monospace") {
+		this.size = size;
+		this.family = family;
+	}
+
+	get() {
+		return `${this.size}px ${this.family}`;
+	}
+
+	static fromString(str) {
+		return new font(
+			parseInt(str.split("px")[0]),
+			str.split("px")[1]
+		);
 	}
 }

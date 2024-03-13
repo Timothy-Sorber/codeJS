@@ -1,15 +1,10 @@
-if (document.location.href!="https://timothy-sorber.github.io/jsgame/") {
-	let a = document.createElement("a");
-	a.href = "https://timothy-sorber.github.io/jsgame/";
-	a.click();
-}
-
-import { game, Location, Vector2, Object } from './jsgame/jsgame.js';
+import { game, Location, Vector2, Object, util } from './jsgame/jsgame.js';
 
 const canvas = document.getElementById("canvas"),
 	ctx = canvas.getContext("2d"),
 	Game = new game({
 		frameRate: 60,
+		debugLogging: true,
 		bgcolor: "black",
 		canvas: canvas,
 		viewPort: {
@@ -22,7 +17,7 @@ const canvas = document.getElementById("canvas"),
 			strength: 0.1
 		},
 		camera: {
-			position: new Vector2(-475, -500),
+			position: new Vector2(-475, 500),
 			velocity: new Vector2(0, 0),
 			zoom: 1
 		},
@@ -32,14 +27,14 @@ const canvas = document.getElementById("canvas"),
 			loc.lookTowards(this.Objects[0].location.position);
 			loc.show(this.ctx);
 
+			this.engine.drawText("W = jump, A/D = move", -400, 0, "white");
+
 			// Move the camera smoothy towards the players position
 			const dx = this.Objects[0].location.position.x - this.camera.position.x;
 			const dy = this.Objects[0].location.position.y - this.camera.position.y
 
 			this.camera.position.x += dx * 0.1;
 			this.camera.position.y += dy * 0.1;
-
-			this.engine.drawText("W = jump, A/D = move", -400, 0, "white");
 		}
 	});
 
@@ -75,16 +70,6 @@ Game.addObject(new Object(
 		},
 		onCollision: function(object, dir) {
 			this.location.velocity.scale(0.93);
-
-			if (object.texture=="fnuuy") {
-				object.physMode = "dynamic";
-				object.update = function () {
-					if (this.location.position.y>100) {
-						this.location.position.set(new Vector2(-400, -500));
-						this.location.velocity.set(new Vector2());
-					}
-				}
-			}
 			
 			if (dir.y==-1) {
 				this.jumps = 2;
@@ -181,18 +166,9 @@ let player = new Image();
 player.src = "./assets/player.png";
 Game.textures.set("player", player);
 
-for (let i=0; i<10; i++) {
-	Game.addObject(new Object(
-		new Location(new Vector2(Math.random()*1000-500, -400)), {
-			physMode: "static",
-			texture: "fnuuy"
-		}
-	));
-}
-
 document.addEventListener("wheel", function(e) {
-	Game.camera.zoom -= e.deltaY * 0.01;
-	Game.camera.zoom = Math.max(0.1, Math.min(5, 					Game.camera.zoom));
+	Game.camera.zoom -= e.deltaY * 0.001;
+	Game.camera.zoom = util.clamp(Game.camera.zoom, 0.1, 5)
 });
 
 Game.run();

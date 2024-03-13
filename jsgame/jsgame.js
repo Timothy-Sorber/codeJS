@@ -401,6 +401,10 @@ export class util {
 
 		return new Vector2(worldX, worldY);
 	}
+
+	static clamp(val, min, max) {
+		return Math.max(min, Math.min(max, val));
+	}
 }
 
 // Default options
