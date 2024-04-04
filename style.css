@@ -3,6 +3,95 @@ html {
   width: 100%;
 }
 body {
-	margin: 0px;
+	background-color: rgb(50, 50, 50);
+	
+}
+.display {
+	background-color: inherit;
+	text-align: center;
+}
+.code-area {
+	position: absolute;
+	top: 0px;
+	left: 52%;
+	width: 50%;
+	height: 100%;
+	display: flex;
+}
+.code-line-numbers {
+	counter-reset: line;
+	width: 25px;
+	background-color: rgb(60,60,60);
+	padding: 8px;
+	border-right: 1px solid #ccc;
+	font-size: 16px;
+	font-family: monospace;
+	color: #ccc;
 	overflow: hidden;
+}
+
+.code-line-numbers div {
+	counter-increment: line;
+	display: block;
+	color: #999;
+}
+
+.code-box {
+	background-color: rgb(40, 40, 40);
+	color: white;
+	font-family: monospace;
+	font-size: 16px;
+	padding: 8px;
+	border: none;
+	outline: none;
+	resize: none;
+	white-space: pre-wrap;
+	tab-size: 2;
+}
+.run {
+	background-color: limegreen;
+	border-color: green;
+	border-radius: 8px;
+	width: 75px;
+	height: 40px;
+	align-self: center;
+}
+.stop {
+	background-color: red;
+	border-color: darkred;
+	border-radius: 8px;
+	width: 75px;
+	height: 40px;
+	align-self: center;
+}
+#canvas {
+	background-color: white;
+	border-radius: 8px;
+}
+.console {
+	background-color: rgb(60,60,60);
+	position: relative;
+	top: 8px;
+	text-align: bottom;
+	padding: 8px;
+}
+.log {
+	color: white;
+	background-color: rgb(255, 255, 255, 0.25);
+	font-family: monospace;
+	text-align: left;
+}
+
+.warning {
+	color: yellow;
+	background-color: rgb(255, 255, 0, 0.25);
+	font-family: monospace;
+	text-align: left;
+}
+
+.error {
+	color: red;
+	background-color: rgb(255, 0, 0, 0.25);
+	font-family: monospace;
+	text-align: left;
 }

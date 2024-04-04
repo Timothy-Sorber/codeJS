@@ -6,11 +6,26 @@
   <meta name="viewport" content="width=device-width">
   <title>replit</title>
   <link href="style.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/codemirror.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/theme/material-darker.min.css">
 </head>
 
 <body>
-  <canvas id="canvas">
+	<div class="display" id="disp">
+		<button class="run" id="run">Run</button><br /><br />
+  	<canvas id="canvas"></canvas><br />
+		<div class="console" id="console"></div>
+	</div>
+	<div class="code-area" id="code-area">
+		<textarea class="code-box" placeholder="Type your code here." id="code-box" contenteditable="true" spellcheck="false">
+function draw() {
+	// :)
+}</textarea>
+	</div>
   <script type="module" src="script.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+	<script src="syntaxhighlighting.js"></script>
 </body>
 
 </html>
