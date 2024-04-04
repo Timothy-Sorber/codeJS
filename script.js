@@ -5,25 +5,11 @@ const canvas = document.getElementById("canvas"),
 	consolediv = document.getElementById("console"),
 	dispdiv = document.getElementById("disp");
 
+let editor = getCodeEditor();
+
 codebox.addEventListener('keydown', function(e) {
-		// Check if the pressed key is the Tab key
-		if (e.key === 'Tab') {
-				// Prevent the default Tab behavior (changing focus)
-				e.preventDefault();
-
-				// Get the current cursor position
-				var start = this.selectionStart;
-				var end = this.selectionEnd;
-
-				// Insert a tab character at the cursor position
-				var tab = '    ';
-				this.value = this.value.substring(0, start) + tab + this.value.substring(end);
-
-				// Move the cursor to the right
-				this.selectionStart = this.selectionEnd = start + tab.length;
-		} else if (e.key === 's' && e.ctrlKey) {
-			e.preventDefault();
-			run();
+		if (e.key === 'c') {
+			editor.replaceSelection("}");
 		}
 });
 
@@ -32,7 +18,6 @@ let lsize;
 function loop() {
 	let size = Math.min(innerWidth/2, innerHeight/2);
 	if (lsize!=size) {
-		let editor = getCodeEditor();
 		canvas.width = size;
 		canvas.height = size;
 		codearea.style.left = size*1.2+"px";
@@ -90,7 +75,7 @@ function fillCircle(x, y, r, color="black") {
 	ctx.fill();
 }
 let events = {
-	onframe: []
+	onFrame: []
 }
 
 function onEvent(type, listener) {
@@ -106,13 +91,12 @@ runbutton.onclick = run;
 function run() {
 	if (!running) {
 		let code = getCodeEditor().getValue();
-		console.log(code);
 		if (code.includes("function draw()")) {
-			code += ";; onEvent('onframe', draw);"
+			code += "\n; onEvent('onFrame', draw);"
 		}
 		try {
 			eval(code);
-			if (events.onframe.length>0) {
+			if (events.onFrame.length>0) {
 				running = true;
 				runbutton.className = "stop";
 				runbutton.innerText = "Stop";
@@ -130,8 +114,8 @@ function run() {
 }
 
 function gameLoop() {
-	for (let i=0; i<events.onframe.length; i++) {
-		events.onframe[i]();
+	for (let i=0; i<events.onFrame.length; i++) {
+		events.onFrame[i]();
 	}
 	
 	if (running) {
