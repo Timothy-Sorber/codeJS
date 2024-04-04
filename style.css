@@ -94,6 +94,7 @@ a:active {
 	padding: 8px;
 	border-radius: 8px;
 	overflow: scroll;
+	overflow-x: hidden;
 }
 .log {
 	color: white;
