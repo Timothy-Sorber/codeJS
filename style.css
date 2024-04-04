@@ -5,6 +5,16 @@ html {
 body {
 	background-color: rgb(50, 50, 50);
 	overflow: hidden;
+	font-family: monospace;
+}
+a:link {
+	color: aqua
+}
+a:visited {
+	color: gray
+}
+a:active {
+	color: red
 }
 .display {
 	background-color: inherit;
