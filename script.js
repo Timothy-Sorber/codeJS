@@ -15,6 +15,10 @@ codebox.addEventListener('keydown', function(e) {
 
 let lsize;
 
+function getScreenFactor() {
+	return lsize/400;
+}
+
 function loop() {
 	let size = Math.min(innerWidth/2, innerHeight/2);
 	if (lsize!=size) {
@@ -29,51 +33,10 @@ function loop() {
 		dispdiv.style.width = size+"px";
 		lsize = size;
 	}
-	if (typeof draw == "function") {
-		draw();
-	}
+	setLSize(lsize);
 	requestAnimationFrame(loop);
 }
 
-function drawRect(x, y, w, h, color="black", lineWidth=2) {
-	ctx.strokeStyle = color;
-	let sfact = lsize/400;
-	ctx.lineWidth = lineWidth*sfact;
-	ctx.strokeRect(x*sfact, y*sfact, w*sfact, h*sfact);
-}
-
-function fillRect(x, y, w, h, color="black") {
-	ctx.fillStyle = color;
-	let sfact = lsize/400;
-	ctx.fillRect(x*sfact, y*sfact, w*sfact, h*sfact);
-}
-
-function drawLine(x1, y1, x2, y2, color="black", lineWidth=2) {
-	ctx.strokeStyle = color;
-	let sfact = lsize/400;
-	ctx.lineWidth = lineWidth*sfact;
-	ctx.beginPath();
-	ctx.moveTo(x1*sfact, y1*sfact);
-	ctx.lineTo(x2*sfact, y2*sfact);
-	ctx.stroke();
-}
-
-function drawCircle(x, y, r, color="black", lineWidth=2) {
-	ctx.strokeStyle = color;
-	let sfact = lsize/400;
-	ctx.lineWidth = lineWidth*sfact;
-	ctx.beginPath();
-	ctx.arc(x*sfact, y*sfact, r*sfact, 0, 2 * Math.PI);
-	ctx.stroke();
-}
-
-function fillCircle(x, y, r, color="black") {
-	ctx.fillStyle = color;
-	let sfact = lsize/400;
-	ctx.beginPath();
-	ctx.arc(x*sfact, y*sfact, r*sfact, 0, 2 * Math.PI);
-	ctx.fill();
-}
 let events = {
 	onFrame: []
 }
@@ -124,6 +87,7 @@ function gameLoop() {
 		for (let k in events) {
 			events[k] = [];
 		}
+		fillRect(0, 0, 400, 400, 'white');
 	}
 }
 
