@@ -1,23 +1,25 @@
-const consolediv = document.getElementById("console");
+const consoleDiv = document.getElementById('console');
+let isAtBottom = true;
 
-if (typeof console  != "undefined") 
-	if (typeof console.log != 'undefined')
-			console.olog = console.log;
-	else
-			console.olog = function() {};
+// Function to check if scroll is at the bottom
+function checkScroll() {
+		isAtBottom = consoleDiv.scrollHeight - consoleDiv.clientHeight <= consoleDiv.scrollTop + 1;
+}
 
-console.log = function(message) {
-	console.olog(message);
-	consolediv.innerHTML += ('<div class="log">' + message + '</div>');
-};
+// Initial check
+checkScroll();
 
-if (typeof console  != "undefined") 
-	if (typeof console.warn != 'undefined')
-			console.owarn = console.warn;
-	else
-			console.owarn = function() {};
+// Observer to detect new elements added to the console
+const observer = new MutationObserver(() => {
+		// If scroll is already at the bottom, scroll down slowly
+		if (isAtBottom) {
+				consoleDiv.scrollTop = consoleDiv.scrollHeight;
+		}
+});
 
-console.warn = function(message) {
-	console.owarn(message);
-	consolediv.innerHTML += ('<div class="warning">' + message + '</div>');
-};
+observer.observe(consoleDiv, { childList: true });
+
+// Check scroll position on scroll events
+consoleDiv.addEventListener('scroll', () => {
+		checkScroll();
+});

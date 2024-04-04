@@ -28,8 +28,10 @@ function loop() {
 		codearea.style.width = innerWidth - size*1.2+"px";
 		codebox.style.width = codearea.style.width;
 		editor.setSize(codearea.style.width, innerHeight);
-		consolediv.style.width = size+"px";
-		consolediv.style.height = innerHeight-size*1.25+"px";
+		let rect = consolediv.getBoundingClientRect();
+		console.log(rect.top);
+		consolediv.style.width = size;
+		consolediv.style.height = innerHeight-rect.top-24 + "px";
 		dispdiv.style.width = size+"px";
 		lsize = size;
 	}
@@ -45,6 +47,16 @@ function onEvent(type, listener) {
 	if (events[type]) {
 		events[type].push(listener);
 	}
+}
+
+let savebutton = document.getElementById("save");
+savebutton.onclick = () => {
+	let code = editor.getValue();
+	let blob = new Blob([code], {type: "text/plain;charset=utf-8"});
+	let a = document.createElement("a");
+	a.href = URL.createObjectURL(blob);
+	a.download = "code.js";
+	a.click();
 }
 
 

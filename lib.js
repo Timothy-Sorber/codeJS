@@ -2,18 +2,35 @@ let consolediv = document.getElementById("console"),
 	ctx = document.getElementById("canvas").getContext("2d"),
 	lsize = 400;
 
+let logentries = [];
+
+function updlog() {
+	consolediv.innerHTML = "";
+	for (let i=0; i<logentries.length; i++) {
+		consolediv.innerHTML += divOf(logentries[i]);
+	}
+}
+
+function divOf(log) {
+	return `<div class="${log.type}">${log.text}</div>`;
+}
+
 
 function log(text) {
-	consolediv.innerHTML += `<div class="log">${text}</div>`;
+	logentries.push({type:"log", text:text});
+	updlog();
 }
 function warn(text) {
-	consolediv.innerHTML += `<div class="warning">${text}</div>`;
+	logentries.push({type:"warning", text:text});
+	updlog();
 }
 function error(text) {
-	consolediv.innerHTML += `<div class="error">${text}</div>`;
+	logentries.push({type:"error", text:text});
+	updlog();
 }
 function clearLog() {
-	consolediv.innerHTML = '';
+	logentries = [];
+	updlog();
 }
 
 function setLSize(num) {

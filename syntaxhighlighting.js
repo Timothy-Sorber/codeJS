@@ -7,11 +7,10 @@ const editor = CodeMirror.fromTextArea(document.getElementById("code-box"), {
 	indentWithTabs: true,
 	tabSize: 4,
 	autofocus: true,
-	indentUnit: 4
+	indentUnit: 4,
+	autoCloseBrackets: true
 });
 
 function getCodeEditor() {
 	return editor;
 }
-
-console.log(editor.options);
