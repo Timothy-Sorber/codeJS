@@ -89,22 +89,6 @@ function fillCircle(x, y, r, color="black") {
 	ctx.arc(x*sfact, y*sfact, r*sfact, 0, 2 * Math.PI);
 	ctx.fill();
 }
-
-
-
-function log(text) {
-	consolediv.innerHTML += `<div class="log">${text}</div>`;
-}
-function warn(text) {
-	consolediv.innerHTML += `<div class="warning">${text}</div>`;
-}
-function error(text) {
-	consolediv.innerHTML += `<div class="error">${text}</div>`;
-}
-function clearLog() {
-	consolediv.innerHTML = '';
-}
-
 let events = {
 	onframe: []
 }
@@ -114,6 +98,7 @@ function onEvent(type, listener) {
 		events[type].push(listener);
 	}
 }
+
 
 let running = false;
 let runbutton = document.getElementById("run");
