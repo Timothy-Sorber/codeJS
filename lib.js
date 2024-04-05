@@ -94,3 +94,15 @@ function drawText(text, x, y, color="black", font={size: 16, family: "monospace"
 	ctx.font = (font.size*sfact)+"px "+font.family;
 	ctx.fillText(text, x*sfact, y*sfact);
 }
+
+function removeItemAll(arr, value) {
+	var i = 0;
+	while (i < arr.length) {
+		if (arr[i] === value) {
+			arr.splice(i, 1);
+		} else {
+			++i;
+		}
+	}
+	return arr;
+}

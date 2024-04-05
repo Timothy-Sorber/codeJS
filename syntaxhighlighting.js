@@ -27,39 +27,57 @@ function customAutocomplete(editor) {
 	if (token.string == '') {
 		return null;
 	}
+	console.log(token.string)
 	var text = editor.getValue();
 	var word = token.string;
 
 	// Regular expression to match variable declarations
-	var varRegex = /(?:let|var|const|function)\s+([a-zA-Z_$][0-9a-zA-Z_$]*)/g;
+	var varRegex = /(?:let|var|const)\s+([a-zA-Z_$][0-9a-zA-Z_$]*)/g;
+	var funcRegex = /function\s+([a-zA-Z_$][0-9a-zA-Z_$]*)/g;
 
-	var suggestions = ['var', 'let', 'const', 'function'];
+	var suggestions = [
+		{text: 'var', type: 'keyword'},
+		{text: 'let', type: 'keyword'},
+		{text: 'const', type: 'keyword'},
+		{text: 'function', type: 'keyword'},
+		{text: 'if', type: 'keyword'},
+		{text: 'else', type: 'keyword'},
+		{text: 'for', type: 'keyword'},
+		{text: 'while', type: 'keyword'}
+	];
 
 	// Find all variable declarations in the code
-	var match;
-	while ((match = varRegex.exec(text)) !== null) {
-			suggestions.push(match[1]);
+	let vmatch;
+	while ((vmatch = varRegex.exec(text)) !== null) {
+			suggestions.push({text: vmatch[1], type: "variable"});
 	}
 
-	// Calculate a score for each suggestion based on match closeness
-	var scoredSuggestions = suggestions.map(function(suggestion) {
-			var score = 0;
+	// Find all function declarations in the code
+	let fmatch;
+	while ((fmatch = funcRegex.exec(text)) !== null) {
+			suggestions.push({text: fmatch[1], type: "function"});
+	}
+	
+	let scoredSuggestions = [];
+	
+	for (let suggestion of suggestions) {
+		let score = 0,
+			text = suggestion.text.toLowerCase();
 
-			// Score based on how closely the suggestion matches the current word
-			if (suggestion.startsWith(word)) {
-				score += 3;
-			} else if (suggestion.includes(word)) {
-				score += 2;
-			} else if (suggestion.toLowerCase().startsWith(word.toLowerCase())) {
-				score += 1;
-			}
+		if (text.startsWith(word)) {
+			score += 3;
+		} else if (text.includes(word)) {
+			score += 2;
+		} else {
+			score += 0;
+		}
 
-			return { suggestion: suggestion, score: score };
-	});
+		scoredSuggestions.push({suggestion: suggestion, score: score});
+	}
 
 	// Remove suggestions with score 0 (no match)
 	scoredSuggestions = scoredSuggestions.filter(function(item) {
-			return item.score > 0;
+		return item.score > 0;
 	});
 
 	// Sort suggestions based on score in descending order
@@ -71,14 +89,37 @@ function customAutocomplete(editor) {
 	var sortedSuggestions = scoredSuggestions.map(function(item) {
 			return item.suggestion;
 	});
-	if (sortedSuggestions.length <= 1 && sortedSuggestions[0] == token.string) {
+	sortedSuggestions = sortedSuggestions.filter(function(item) {
+			if (item.text!=word) {
+				return item;
+			}
+	});
+	if (sortedSuggestions.length == 0) {
 		return null;
+	}
+	let completeSuggestions = [];
+
+	for (let suggestion of sortedSuggestions) {
+		completeSuggestions.push({
+			text: suggestion.text,
+			displayText: suggestion.text,
+			type: suggestion.type,
+			render: (el, cm, data) => {
+					const icon = document.createElement("span");
+					icon.innerText = data.type;
+					// el.appendChild(icon);
+
+					const text = document.createElement("span");
+					text.innerText = data.displayText;
+					el.appendChild(text);
+				}
+		});
 	}
 
 	return {
-			list: sortedSuggestions,
-			from: {line: cur.line, ch: cur.ch-token.string.length},
-			to: cur
+		list: completeSuggestions,
+		from: {line: cur.line, ch: cur.ch-token.string.length},
+		to: cur
 	};
 }
 
