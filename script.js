@@ -90,7 +90,12 @@ function run() {
 
 function gameLoop() {
 	for (let i=0; i<events.onFrame.length; i++) {
-		events.onFrame[i]();
+		try {
+			events.onFrame[i]();
+		} catch(err) {
+			running = false;
+			error(err);
+		}
 	}
 	
 	if (running) {
