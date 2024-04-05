@@ -1,7 +1,7 @@
 const editor = CodeMirror.fromTextArea(document.getElementById("code-box"), {
 	mode: "javascript",
 	lineNumbers: true, // Optionally, add line numbers
-	theme: "material-darker",
+	theme: "color",
 	styleActiveLine: true,
 	matchBrackets: true,
 	indentWithTabs: true,
@@ -29,7 +29,7 @@ function customAutocomplete(editor) {
 	}
 	console.log(token.string)
 	var text = editor.getValue();
-	var word = token.string;
+	var word = token.string.toLowerCase();
 
 	// Regular expression to match variable declarations
 	var varRegex = /(?:let|var|const)\s+([a-zA-Z_$][0-9a-zA-Z_$]*)/g;
@@ -43,7 +43,11 @@ function customAutocomplete(editor) {
 		{text: 'if', type: 'keyword'},
 		{text: 'else', type: 'keyword'},
 		{text: 'for', type: 'keyword'},
-		{text: 'while', type: 'keyword'}
+		{text: 'while', type: 'keyword'},
+		{text: 'drawRect', type: 'function'},
+		{text: 'fillRect', type: 'function'},
+		{text: 'drawCircle', type: 'function'},
+		{text: 'fillCircle', type: 'function'}
 	];
 
 	// Find all variable declarations in the code
@@ -89,17 +93,16 @@ function customAutocomplete(editor) {
 	var sortedSuggestions = scoredSuggestions.map(function(item) {
 			return item.suggestion;
 	});
-	sortedSuggestions = sortedSuggestions.filter(function(item) {
-			if (item.text!=word) {
-				return item;
-			}
-	});
 	if (sortedSuggestions.length == 0) {
 		return null;
 	}
 	let completeSuggestions = [];
 
 	for (let suggestion of sortedSuggestions) {
+		if (suggestion.text.toLowerCase()==
+			 word.toLowerCase()) {
+			continue;
+		}
 		completeSuggestions.push({
 			text: suggestion.text,
 			displayText: suggestion.text,
