@@ -19,6 +19,20 @@ function getCodeEditor() {
 	return editor;
 }
 
+// Function to find the AST node at a given character index
+function findNodeAtPosition(node, position) {
+	if (node && typeof node === 'object' && node.start <= position && node.end >= position) {
+		for (const key in node) {
+			if (key !== 'parent' && typeof node[key] === 'object') {
+				const result = findNodeAtPosition(node[key], position);
+				if (result) return result;
+			}
+		}
+		return node;
+	}
+	return null;
+}
+
 editor.on("change", () => editor.showHint())
 
 function customAutocomplete(editor) {
@@ -30,10 +44,6 @@ function customAutocomplete(editor) {
 	console.log(token.string)
 	var text = editor.getValue();
 	var word = token.string.toLowerCase();
-
-	// Regular expression to match variable declarations
-	var varRegex = /(?:let|var|const)\s+([a-zA-Z_$][0-9a-zA-Z_$]*)/g;
-	var funcRegex = /function\s+([a-zA-Z_$][0-9a-zA-Z_$]*)/g;
 
 	var suggestions = [
 		{text: 'var', type: 'keyword'},
@@ -47,19 +57,27 @@ function customAutocomplete(editor) {
 		{text: 'drawRect', type: 'function'},
 		{text: 'fillRect', type: 'function'},
 		{text: 'drawCircle', type: 'function'},
-		{text: 'fillCircle', type: 'function'}
+		{text: 'fillCircle', type: 'function'},
+		{text: 'rgb', type: 'function'},
+		{text: 'clone', type: 'function'},
+		{text: 'recursiveClone', type: 'function'}
 	];
 
-	// Find all variable declarations in the code
+	// Regular expression to match variable declarations
+	var varRegex = /(?:let|var|const)\s+([a-zA-Z_$][0-9a-zA-Z_$]*)/g;
+	var funcRegex = /function\s+([a-zA-Z_$][0-9a-zA-Z_$]*)/g;
+
 	let vmatch;
-	while ((vmatch = varRegex.exec(text)) !== null) {
-			suggestions.push({text: vmatch[1], type: "variable"});
+	while ((vmatch = varRegex.exec(text)) != null) {
+		suggestions.push({text: vmatch[1], type: 'variable'});
 	}
 
-	// Find all function declarations in the code
 	let fmatch;
-	while ((fmatch = funcRegex.exec(text)) !== null) {
-			suggestions.push({text: fmatch[1], type: "function"});
+	while ((fmatch = funcRegex.exec(text)) != null) {
+		if (fmatch[1] == 'draw') {
+			continue;
+		}
+		suggestions.push({text: fmatch[1], type: 'function'});
 	}
 	
 	let scoredSuggestions = [];
@@ -108,14 +126,14 @@ function customAutocomplete(editor) {
 			displayText: suggestion.text,
 			type: suggestion.type,
 			render: (el, cm, data) => {
-					const icon = document.createElement("span");
-					icon.innerText = data.type;
-					// el.appendChild(icon);
-
-					const text = document.createElement("span");
-					text.innerText = data.displayText;
-					el.appendChild(text);
-				}
+				const icon = document.createElement("span");
+				icon.innerHTML = `<img src="images/${data.type}.png" width="8px" height="8px"> `;
+				el.appendChild(icon);
+				
+				const text = document.createElement("span");
+				text.innerText = data.displayText;
+				el.appendChild(text);
+			}
 		});
 	}
 

@@ -46,7 +46,7 @@
 }
 
 .cm-variable {
-	color: rgb(150, 100, 255);
+	color: rgb(100, 100, 255);
 }
 
 .cm-def {
@@ -58,7 +58,7 @@
 }
 
 .cm-variable-2 {
-	color: yellow;
+	color: rgb(200,200,0);
 }
 
 .cm-atom {

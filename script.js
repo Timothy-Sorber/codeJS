@@ -63,6 +63,13 @@ savebutton.onclick = () => {
 let running = false;
 let runbutton = document.getElementById("run");
 runbutton.onclick = run;
+
+function exit() {
+	running = false;
+	runbutton.className = "run";
+	runbutton.innerText = "Run";
+}
+
 function run() {
 	if (!running) {
 		let code = getCodeEditor().getValue();
@@ -78,7 +85,8 @@ function run() {
 				gameLoop();
 			}
 		} catch(err) {
-			error(err);
+			console.log(err);
+			error(err.stack);
 		}
 	} else {
 		running = false;
@@ -104,7 +112,6 @@ function gameLoop() {
 		for (let k in events) {
 			events[k] = [];
 		}
-		fillRect(0, 0, 400, 400, 'white');
 	}
 }
 
