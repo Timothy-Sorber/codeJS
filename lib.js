@@ -165,3 +165,7 @@ function recursiveClone(obj) {
 	}
 	return newObj;
 }
+
+function clamp(min, max, val) {
+	return Math.max(Math.min(val, max), min);
+}
